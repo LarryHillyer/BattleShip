@@ -1,8 +1,11 @@
-var grid =  [, , ];
-var missilesFired = 0;
-var battleship = new Ship(5);
-createShips(2,2)
+var player1 = new Player("Sam","novice", "", [], 0);
+
 var rows = ["A","B","C","D","E","F","G","H","I","J"];
+var grid =  createGrid(rows);
+var shipYard = createShips(2,2);
+
+var missilesFired = 0;
+
 
 function Ship(Size) {  
   this.hits=0;
@@ -70,7 +73,7 @@ function checkHit(row, col) {
   }  
 }
 
-var player1 = new Player("Sam","novice", "", [], 0);
+
 
 function Player(name, rating, currentGuess, guesses, numberGuesses) {
   this.name = name;
@@ -80,16 +83,65 @@ function Player(name, rating, currentGuess, guesses, numberGuesses) {
   this.numberGuesses = numberGuesses; 
 }
 
-var ship = {isHit: false};
+function isPositionOccupied(rowIndex, colIndex) {
+    if (grid[rowIndex][colIndex] !== "") {
+        return false
+    }
+   return true
+}
 
-function hideShip(){
+function checkShipPosition(ship,direction, rowIndex, colIndex) {
+    var positionOccupied;
+    if (direction === 0) {
+        var finalRowIndex = rowIndex + ship.size;
+        if (finalRowIndex < rows.length) {          
+            for (var i = rowIndex; i < finalRowIndex; i++) {
+                positionOccupied = isPositionOccupied(i,colIndex);
+                if (positionOccupied) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+        
+    } else {
+        var finalColIndex = colIndex + ship.size;      
+        if (finalColIndex < rows.length) {
+           for (var i = colIndex; i < finalColIndex; i++) {
+               positionOccupied = isPositionOccupied(rowIndex,i)
+               if (positionOccupied) {
+                   return false;
+               }
+           }
+           return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+}
+
+function hideShip(ship){
   ship.isHit=false;
-  var ranIndex = Math.floor(Math.random()*grid.length);
-  grid[ranIndex] = ship;
+  var ifEmpty = false;
+  while (!ifEmpty) {
+    var direction = Math.round(Math.random());
+    var rowIndex = Math.floor(Math.random()*grid.length);
+    var colIndex = Math.floor(Math.random());
+    ifEmpty = checkShipPosition(ship,direction, rowIndex, colIndex);
+    if (ifEmpty) {
+      grid[rowIndex][colIndex] = ship;
+    }      
+  }
+
+  
 }
  
 function alert1(messege1) {
   alert(messege1);
 }
  
-hideShip();
+hideShip(Ship);
