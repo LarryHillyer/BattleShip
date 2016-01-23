@@ -153,4 +153,4 @@ var grid =  createGrid(rows);
 
 var missilesFired = 0;
 var battleShip = new Ship(3);
-hideShip(battleShip);
+hideShip(battleShip, grid);
