@@ -1,14 +1,8 @@
-var player1 = new Player("Sam","novice", "", [], 0);
-
-var rows = ["A","B","C","D","E","F","G","H","I","J"];
-var grid =  createGrid(rows);
-var shipYard = createShips(2,2);
-
-var missilesFired = 0;
 
 
-function Ship(Size) {  
+function Ship(size) {  
   this.hits=0;
+  this.size = size;
   this.isSunk = function() {
     if (this.hits < this.size) {
       return false;
@@ -69,7 +63,7 @@ function checkHit(row, col) {
       alert("You sank my battleship");
     } 
   } else {
-    cell.text = "MISS";
+      cell.text = "MISS";
   }  
 }
 
@@ -84,8 +78,8 @@ function Player(name, rating, currentGuess, guesses, numberGuesses) {
 }
 
 function isPositionOccupied(rowIndex, colIndex) {
-    if (grid[rowIndex][colIndex] !== "") {
-        return false
+    if (grid[rows[rowIndex]][colIndex]['ship'] === undefined) {
+        return false;
     }
    return true
 }
@@ -93,7 +87,7 @@ function isPositionOccupied(rowIndex, colIndex) {
 function checkShipPosition(ship,direction, rowIndex, colIndex) {
     var positionOccupied;
     if (direction === 0) {
-        var finalRowIndex = rowIndex + ship.size;
+        var finalRowIndex = rowIndex + ship.size - 1;
         if (finalRowIndex < rows.length) {          
             for (var i = rowIndex; i < finalRowIndex; i++) {
                 positionOccupied = isPositionOccupied(i,colIndex);
@@ -103,11 +97,11 @@ function checkShipPosition(ship,direction, rowIndex, colIndex) {
             }
             return true;
         } else {
-            return false;
+            return true;
         }
         
     } else {
-        var finalColIndex = colIndex + ship.size;      
+        var finalColIndex = colIndex + ship.size - 1;      
         if (finalColIndex < rows.length) {
            for (var i = colIndex; i < finalColIndex; i++) {
                positionOccupied = isPositionOccupied(rowIndex,i)
@@ -117,31 +111,43 @@ function checkShipPosition(ship,direction, rowIndex, colIndex) {
            }
            return true;
         } else {
-            return false;
-        }
-        
+            return true;
+        }        
     }
-
 }
 
 function hideShip(ship){
-  ship.isHit=false;
+  ship['isHit']=false;
   var ifEmpty = false;
+  var direction = Math.round(Math.random());
+  var rowIndex = Math.floor(Math.random()*rows.length);
+  var colIndex = Math.floor(Math.random()*rows.length);
   while (!ifEmpty) {
-    var direction = Math.round(Math.random());
-    var rowIndex = Math.floor(Math.random()*grid.length);
-    var colIndex = Math.floor(Math.random());
     ifEmpty = checkShipPosition(ship,direction, rowIndex, colIndex);
     if (ifEmpty) {
-      grid[rowIndex][colIndex] = ship;
+        if (direction === 0) {
+            for (var i = rowIndex; i < rowIndex + ship.size; i++) {
+                grid[rows[i]][colIndex]['ship'] = ship;         
+            }
+        } else {
+            for (var j = colIndex; j < colIndex + ship.size; j++) {
+                grid[rows[rowIndex]][j]['ship'] = ship;
+            }
+        }
     }      
-  }
-
-  
+  }  
 }
  
 function alert1(messege1) {
   alert(messege1);
 }
- 
-hideShip(Ship);
+
+var player1 = new Player("Sam","novice", "", [], 0);
+
+var rows = ["A","B","C","D","E","F","G","H","I","J"];
+var grid =  createGrid(rows);
+// var shipYard = createShips(2,2);
+
+var missilesFired = 0;
+var battleShip = new Ship(3);
+hideShip(battleShip);
