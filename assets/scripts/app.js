@@ -119,10 +119,11 @@ function checkShipPosition(ship,direction, rowIndex, colIndex) {
 function hideShip(ship){
   ship['isHit']=false;
   var ifEmpty = false;
-  var direction = Math.round(Math.random());
-  var rowIndex = Math.floor(Math.random()*rows.length);
-  var colIndex = Math.floor(Math.random()*rows.length);
+
   while (!ifEmpty) {
+    var direction = Math.round(Math.random());
+    var rowIndex = Math.floor(Math.random()*rows.length);
+    var colIndex = Math.floor(Math.random()*rows.length);      
     ifEmpty = checkShipPosition(ship,direction, rowIndex, colIndex);
     if (ifEmpty) {
         if (direction === 0) {
