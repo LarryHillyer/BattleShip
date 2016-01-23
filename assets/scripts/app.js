@@ -59,11 +59,13 @@ function checkHit(row, col) {
   if (cell.ship) {
     cell.ship.hits += 1;
     cell.text = "Hit";
+    alert(cell.text);
     if(cell.ship.isSunk()) {
       alert("You sank my battleship");
     } 
   } else {
       cell.text = "MISS";
+      alert(cell.text);
   }  
 }
 
@@ -77,21 +79,21 @@ function Player(name, rating, currentGuess, guesses, numberGuesses) {
   this.numberGuesses = numberGuesses; 
 }
 
-function isPositionOccupied(rowIndex, colIndex) {
-    if (grid[rows[rowIndex]][colIndex]['ship'] === undefined) {
+function isOccupied(rowI, colI) {
+    if (grid[rows[rowI]][colI]['ship'] === undefined) {
         return false;
     }
    return true
 }
 
 function checkShipPosition(ship,direction, rowIndex, colIndex) {
-    var positionOccupied;
+    var isNotValid;
     if (direction === 0) {
         var finalRowIndex = rowIndex + ship.size - 1;
         if (finalRowIndex < rows.length) {          
             for (var i = rowIndex; i < finalRowIndex; i++) {
-                positionOccupied = isPositionOccupied(i,colIndex);
-                if (positionOccupied) {
+                isNotValid = isOccupied(i,colIndex);
+                if (isNotValid) {
                     return false;
                 }
             }
@@ -104,8 +106,8 @@ function checkShipPosition(ship,direction, rowIndex, colIndex) {
         var finalColIndex = colIndex + ship.size - 1;      
         if (finalColIndex < rows.length) {
            for (var i = colIndex; i < finalColIndex; i++) {
-               positionOccupied = isPositionOccupied(rowIndex,i)
-               if (positionOccupied) {
+               isNotValid = isOccupied(rowIndex,i)
+               if (isNotValid) {
                    return false;
                }
            }
@@ -116,16 +118,16 @@ function checkShipPosition(ship,direction, rowIndex, colIndex) {
     }
 }
 
-function hideShip(ship){
+function hideShip(ship, grid){
   ship['isHit']=false;
-  var ifEmpty = false;
+  var ifValid = false;
 
-  while (!ifEmpty) {
+  while (!ifValid) {
     var direction = Math.round(Math.random());
     var rowIndex = Math.floor(Math.random()*rows.length);
     var colIndex = Math.floor(Math.random()*rows.length);      
-    ifEmpty = checkShipPosition(ship,direction, rowIndex, colIndex);
-    if (ifEmpty) {
+    ifValid = checkShipPosition(ship,direction, rowIndex, colIndex);
+    if (ifValid) {
         if (direction === 0) {
             for (var i = rowIndex; i < rowIndex + ship.size; i++) {
                 grid[rows[i]][colIndex]['ship'] = ship;         
@@ -139,9 +141,9 @@ function hideShip(ship){
   }  
 }
  
-function alert1(messege1) {
-  alert(messege1);
-}
+// function alert1(messege1) {
+//   alert(messege1);
+// }
 
 var player1 = new Player("Sam","novice", "", [], 0);
 
